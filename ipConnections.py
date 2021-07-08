@@ -59,26 +59,24 @@ while True:
         if tcpLine[0].isalpha():
           continue
 
-        # Translate the IP and port using the littleEndianIp function. Then, combine the local and remote IPv4 addresses (with ports) into 1 string.
-        # output will be "192.0.2.56:5973 -> 10.0.0.5:80"
-
-        localRemoteConnection = littleEndianIp(tcpLine[1]) + ":" + str(int(tcpLine[2],16)) + " -> " + littleEndianIp(tcpLine[3]) + ":" + str(int(tcpLine[4],16))
+        # Translate the IP and port using the littleEndianIp function. 
+        # Assign variables for the connections and ports
         
-        # Check if new string "localRemoteConnection" is in set "uniqueConnections". If it is in the set already, continue to next line
-        if localRemoteConnection in uniqueConnections:
-          continue
-
-        # If new string "localRemoteConnection" is not in set "uniqueConnections" 
-        else:
-          # Change the datetime to required format of "2021-04-28 15:28:05"
-          now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-          # Print the timestamp, text and localRemoteConnection string in one line
-          print(now + ":" + " New connection: " + localRemoteConnection)
-          
-          # Add ipv4 addresses (localRemoteConnection) to the set 
-          uniqueConnections.add(localRemoteConnection)
-      
+        localConn = littleEndianIp(tcpLine[1])
+        localPort = str(int(tcpLine[2],16))
+        remoteConn = littleEndianIp(tcpLine[3]) 
+        remotePort = str(int(tcpLine[4],16))
+        
+        # add connections and ports into 1 string called localRemoteConnection
+        # output: " New connection: 192.0.2.56:5973 -> 10.0.0.5:80"
+        localRemoteConnection =  " New connection: " + localConn + ":" + localPort + " -> " + remoteConn + ":" + remotePort
+        
+        # Add timestamp with appropriate formatting
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # print output with timestamp
+        print(now + ":" + localRemoteConnection)
+    
       # Sleep for 10 seconds
       time.sleep(10)
 
