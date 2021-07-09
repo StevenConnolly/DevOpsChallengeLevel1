@@ -58,25 +58,30 @@ while True:
         # First line in file needs to be skipped. If line begins with a-z, continue
         if tcpLine[0].isalpha():
           continue
+        
+        if tcpLine[0] in uniqueConnections:
+            continue
+        else:
+            # Translate the IP and port using the littleEndianIp function. 
+            # Assign variables for the connections and ports
+            sl = str(tcpLine[0])
+            localConn = littleEndianIp(tcpLine[1])
+            localPort = str(int(tcpLine[2],16))
+            remoteConn = littleEndianIp(tcpLine[3]) 
+            remotePort = str(int(tcpLine[4],16))
 
-        # Translate the IP and port using the littleEndianIp function. 
-        # Assign variables for the connections and ports
+            # add connections and ports into 1 string called localRemoteConnection
+            # output: " New connection: 192.0.2.56:5973 -> 10.0.0.5:80"
+            localRemoteConnection =  " New connection: " + localConn + ":" + localPort + " -> " + remoteConn + ":" + remotePort
         
-        localConn = littleEndianIp(tcpLine[1])
-        localPort = str(int(tcpLine[2],16))
-        remoteConn = littleEndianIp(tcpLine[3]) 
-        remotePort = str(int(tcpLine[4],16))
+            # Add timestamp with appropriate formatting
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # add connections and ports into 1 string called localRemoteConnection
-        # output: " New connection: 192.0.2.56:5973 -> 10.0.0.5:80"
-        localRemoteConnection =  " New connection: " + localConn + ":" + localPort + " -> " + remoteConn + ":" + remotePort
-        
-        # Add timestamp with appropriate formatting
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        # print output with timestamp
-        print(now + ":" + localRemoteConnection)
-    
+            # print output with timestamp
+            print(now + ":" + localRemoteConnection)
+            # add sl to unique set to guarantee only new connections are added
+            uniqueConnections.add(sl)
+
       # Sleep for 10 seconds
       time.sleep(10)
 
